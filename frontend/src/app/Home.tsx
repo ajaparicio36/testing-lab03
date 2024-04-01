@@ -1,14 +1,7 @@
-import React, { Fragment } from "react";
-
-import NavBar from "../components/NavBar";
+import React from "react";
 
 const Home = () => {
-  return (
-    <Fragment>
-      <NavBar />
-      <div>content</div>
-    </Fragment>
-  );
+  return <div>show pogs list</div>;
 };
 
 export default Home;
