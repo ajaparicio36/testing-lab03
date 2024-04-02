@@ -19,10 +19,10 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/" element={<App />}>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
           <Route path="/pogs/:id" element={<Pogs />} />
           <Route path="/account" element={<Account />} />
         </Route>
