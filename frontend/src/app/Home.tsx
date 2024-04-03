@@ -12,16 +12,16 @@ const Home = () => {
   ];
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div className="container mx-auto py-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
         {cardData.map((card, index) => (
           <PogCard
             key={index}
             name={card.name}
             symbol={card.symbol}
             price={card.price}
-            onEdit={() => console.log("Edit clicked")}
-            onDelete={() => console.log("Delete clicked")}
+            onBuy={() => console.log("Buy clicked")}
+            onSell={() => console.log("Sell clicked")}
           />
         ))}
       </div>
