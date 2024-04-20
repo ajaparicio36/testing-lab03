@@ -70,7 +70,9 @@ const NavBar = () => {
                 ) : (
                   <div className="flex flex-1 flex-col gap-2">
                     <div className="flex flex-row gap-2 mb-2 self-center">
-                      <span>Hello, {name}</span>
+                      <span onClick={() => navigate("/account")}>
+                        Hello, {name}
+                      </span>
                     </div>
                     <div
                       onClick={handleLogin}

@@ -6,11 +6,12 @@ import reportWebVitals from "./reportWebVitals";
 
 import App from "./App";
 import Home from "./app/Home";
-import Admin from "./admin/Admin";
+import Admin from "./app/Admin";
 import Pogs from "./app/Pogs";
 import Account from "./app/Account";
 import Login from "./app/Login";
 import Register from "./app/Register";
+import Create from "./app/Create";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -23,10 +24,10 @@ root.render(
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<App />}>
           <Route path="/" element={<Home />} />
-          <Route path="/pogs/:id" element={<Pogs />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/create" element={<Create />} />
           <Route path="/account" element={<Account />} />
         </Route>
-        <Route path="/admin" element={<Admin />}></Route>
       </Routes>
     </Router>
   </React.StrictMode>
