@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   name: string;
@@ -14,6 +15,8 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -36,14 +39,12 @@ const Register = () => {
       });
 
       if (response.ok) {
-        // Handle successful registration
-        console.log("Registration successful!");
+        alert("Registration successful!");
+        navigate("/login");
       } else {
-        // Handle registration error
-        console.error("Registration failed.");
+        alert("Registration failed!");
       }
     } catch (error) {
-      // Handle network error
       console.error("Network error:", error);
     }
   };

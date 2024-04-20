@@ -1,4 +1,5 @@
 import React, { FormEvent, ChangeEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormData {
   email: string;
@@ -10,6 +11,8 @@ const Login = () => {
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,14 +34,14 @@ const Login = () => {
       });
 
       if (response.ok) {
-        // Handle successful login
-        console.log("Login successful!");
+        const { token } = await response.json();
+        localStorage.setItem("token", token);
+        navigate("/");
+        alert("Login successful!");
       } else {
-        // Handle login error
-        console.error("Login failed.");
+        alert("Login failed");
       }
     } catch (error) {
-      // Handle network error
       console.error("Network error:", error);
     }
   };

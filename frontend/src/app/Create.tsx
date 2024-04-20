@@ -7,6 +7,7 @@ const Create = () => {
     name: "",
     symbol: "",
     price: "",
+    color: "#000000", // Default color is black
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,7 +17,7 @@ const Create = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/create", {
+      const response = await fetch("http://localhost:5000/manage/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,6 +84,22 @@ const Create = () => {
               id="price"
               name="price"
               value={newPog.price}
+              onChange={handleChange}
+              className="border border-gray rounded-md p-2 w-full"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="color"
+              className="block text-primary font-semibold mb-2"
+            >
+              Color
+            </label>
+            <input
+              type="color"
+              id="color"
+              name="color"
+              value={newPog.color}
               onChange={handleChange}
               className="border border-gray rounded-md p-2 w-full"
             />

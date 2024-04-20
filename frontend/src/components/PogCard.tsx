@@ -2,16 +2,14 @@ import React from "react";
 
 interface PogCardProps {
   onBuy: (id: number) => void;
-  onSell: (id: number) => void;
   name: string;
   symbol: string;
-  price: string;
+  price: number;
   id: number;
 }
 
 const PogCard: React.FC<PogCardProps> = ({
   onBuy,
-  onSell,
   name,
   symbol,
   price,
@@ -33,12 +31,6 @@ const PogCard: React.FC<PogCardProps> = ({
             onClick={() => onBuy(id)}
           >
             Buy
-          </button>
-          <button
-            className="bg-[#c793dc] hover:bg-[#b65bd9] text-[#f8f5f9] font-bold py-2 px-4 rounded"
-            onClick={() => onSell(id)}
-          >
-            Sell
           </button>
         </div>
       </div>

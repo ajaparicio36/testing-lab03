@@ -5,7 +5,7 @@ interface CardData {
   id: number;
   name: string;
   symbol: string;
-  price: string;
+  current_price: number;
 }
 
 const Home = () => {
@@ -73,19 +73,23 @@ const Home = () => {
   return (
     <Fragment>
       <div className="container mx-auto py-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-          {cardData.map((card, index) => (
+        {cardData.length === 0 ? (
+          <div className="flex text-gray flex-col sm:flex-row items-center justify-center w-full">
+            <span>No pogs detected!</span>
+          </div>
+        ) : (
+          cardData.map((card, index) => (
             <PogCard
               id={card.id}
               key={index}
               name={card.name}
               symbol={card.symbol}
-              price={card.price}
+              price={card.current_price}
               onBuy={() => handleBuy(card.id)}
-              onSell={() => handleSell(card.id)}
             />
-          ))}
-        </div>
+          ))
+        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2"></div>
       </div>
     </Fragment>
   );

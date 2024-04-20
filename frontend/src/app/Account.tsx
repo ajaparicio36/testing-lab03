@@ -11,9 +11,7 @@ interface CardData {
 
 const Account = () => {
   const [userName, setUserName] = useState("AJ"); // Replace with the actual user's name
-  const [userPogs, setUserPogs] = useState<CardData[]>([
-    { name: "AJ", id: 1, symbol: "TYT", price: "300" },
-  ]);
+  const [userPogs, setUserPogs] = useState<CardData[]>([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -64,28 +62,34 @@ const Account = () => {
             {userName}'s Account
           </h2>
           <div className="grid grid-cols-1 gap-2">
-            {userPogs.map((pog, index) => (
-              <div
-                key={index}
-                className="bg-white border border-gray rounded-md p-4 flex items-center justify-between"
-              >
-                <div className="flex items-center">
-                  <div className="mr-4">
-                    <span className="text-primary font-semibold">
-                      {pog.name}
-                    </span>{" "}
-                    <span className="text-gray">({pog.symbol})</span>
-                  </div>
-                  <div className="text-accent font-semibold">{pog.price}</div>
-                </div>
-                <button
-                  className="bg-gray text-white px-4 py-2 rounded-md"
-                  onClick={() => handleSell(pog.id)}
-                >
-                  <Icon path={mdiCurrencyUsd} size={1} color="#f8f5f9" />
-                </button>
+            {userPogs.length === 0 ? (
+              <div className="flex text-gray flex-col sm:flex-row items-center justify-center w-full">
+                <span>No pogs owned!</span>
               </div>
-            ))}
+            ) : (
+              userPogs.map((pog, index) => (
+                <div
+                  key={index}
+                  className="bg-white border border-gray rounded-md p-4 flex items-center justify-between"
+                >
+                  <div className="flex items-center">
+                    <div className="mr-4">
+                      <span className="text-primary font-semibold">
+                        {pog.name}
+                      </span>{" "}
+                      <span className="text-gray">({pog.symbol})</span>
+                    </div>
+                    <div className="text-accent font-semibold">{pog.price}</div>
+                  </div>
+                  <button
+                    className="bg-gray text-white px-4 py-2 rounded-md"
+                    onClick={() => handleSell(pog.id)}
+                  >
+                    <Icon path={mdiCurrencyUsd} size={1} color="#c793dc" />
+                  </button>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
