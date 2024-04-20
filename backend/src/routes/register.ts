@@ -8,11 +8,9 @@ router.post("/", async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
   try {
-    // Hash the password using bcrypt
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Insert the user data into the PostgreSQL database
     const query =
       "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id";
     const values = [name, email, hashedPassword];

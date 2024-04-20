@@ -5,37 +5,56 @@ import { pool } from "../utils/pool";
 
 const router: Router = express.Router();
 
-router.post("/", async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+router
+  .post("/", async (req: Request, res: Response) => {
+    const { email, password } = req.body;
 
-  try {
-    // Check if the user exists in the database
-    const query = "SELECT * FROM users WHERE email = $1";
-    const values = [email];
-    const result = await pool.query(query, values);
-    const user = result.rows[0];
+    try {
+      const query = "SELECT * FROM users WHERE email = $1";
+      const values = [email];
+      const result = await pool.query(query, values);
+      const user = result.rows[0];
 
-    if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      if (!user) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+
+      const token = jwt.sign(
+        { userId: user.id, name: user.name, type: user.type },
+        "gwapo",
+        {
+          expiresIn: "4h",
+        }
+      );
+
+      res.json({ message: "Login successful", token });
+    } catch (error) {
+      console.error("Error logging in:", error);
+      res.status(500).json({ message: "Internal server error" });
     }
+  })
+  .post("/decrypt", async (req: Request, res: Response) => {
+    try {
+      const token = req.headers.authorization?.split(" ")[1];
 
-    // Compare the provided password with the hashed password in the database
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!token) {
+        return res.status(401).json({ error: "No token provided" });
+      }
 
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || "");
+
+      res.status(200).json(decoded);
+    } catch (error) {
+      if (error instanceof jwt.JsonWebTokenError) {
+        return res.status(401).json({ error: "Invalid token" });
+      }
+      res.status(500).json({ error: "Internal server error" });
     }
-
-    // Generate a JWT token
-    const token = jwt.sign({ userId: user.id }, "gwapo", {
-      expiresIn: "4h", // Token expiration time (e.g., 1 hour)
-    });
-
-    res.json({ message: "Login successful", token });
-  } catch (error) {
-    console.error("Error logging in:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
+  });
 
 export default router;
