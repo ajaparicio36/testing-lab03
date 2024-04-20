@@ -19,10 +19,28 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log("Form Data:", formData);
+    try {
+      const response = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        // Handle successful login
+        console.log("Login successful!");
+      } else {
+        // Handle login error
+        console.error("Login failed.");
+      }
+    } catch (error) {
+      // Handle network error
+      console.error("Network error:", error);
+    }
   };
 
   return (
