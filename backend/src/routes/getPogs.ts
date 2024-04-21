@@ -17,7 +17,7 @@ router
     try {
       const query = "SELECT * FROM pogs";
       const { rows } = await pool.query(query);
-      res.json(rows);
+      res.status(200).json(rows);
     } catch (error) {
       console.error("Error fetching pogs:", error);
       res.status(500).json({ error: "Internal server error" });
@@ -38,7 +38,7 @@ router
 
       const query = "SELECT * FROM pogs WHERE owner = $1";
       const { rows } = await pool.query(query, [userId]);
-      res.json(rows);
+      res.status(200).json(rows);
     } catch (error) {
       console.error("Error fetching pogs:", error);
       res.status(500).json({ error: "Internal server error" });
@@ -48,7 +48,7 @@ router
     try {
       const query = "SELECT * FROM pogs WHERE owner IS NULL";
       const { rows } = await pool.query(query);
-      res.json(rows);
+      res.status(200).json(rows);
     } catch (error) {
       console.error("Error fetching pogs:", error);
       res.status(500).json({ error: "Internal server error" });

@@ -34,7 +34,7 @@ router
         }
       );
 
-      res.json({ message: "Login successful", token });
+      res.status(201).json({ message: "Login successful", token });
     } catch (error) {
       console.error("Error logging in:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -50,7 +50,7 @@ router
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET || "");
 
-      res.status(200).json(decoded);
+      res.status(201).json(decoded);
     } catch (error) {
       if (error instanceof jwt.JsonWebTokenError) {
         return res.status(401).json({ error: "Invalid token" });

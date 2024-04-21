@@ -37,7 +37,7 @@ router
       const updateOwnerQuery = "UPDATE pogs SET owner = $1 WHERE id = $2";
 
       await pool.query(updateOwnerQuery, [userId, pogId]);
-      res.json({ message: "Pog bought successfully" });
+      res.status(201).json({ message: "Pog bought successfully" });
     } catch (err) {
       console.error("Error buying Pog:", err);
       if (err instanceof jwt.JsonWebTokenError) {
@@ -71,7 +71,7 @@ router
         "UPDATE pogs SET owner = NULL WHERE id = $1";
       await pool.query(updatePriceAndOwnerQuery, [pogId]);
 
-      res.json({ message: "Pog sold successfully" });
+      res.status(201).json({ message: "Pog sold successfully" });
     } catch (error) {
       console.error("Error selling Pog:", error);
       res.status(500).json({ error: "Internal server error" });
