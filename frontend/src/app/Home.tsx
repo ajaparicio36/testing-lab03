@@ -5,6 +5,7 @@ interface CardData {
   id: number;
   name: string;
   symbol: string;
+  color: string;
   current_price: number;
 }
 
@@ -14,7 +15,7 @@ const Home = () => {
   useEffect(() => {
     const fetchCardData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/list");
+        const response = await fetch("http://localhost:5000/list/unowned");
         if (response.ok) {
           const data: CardData[] = await response.json();
           setCardData(data);
@@ -31,39 +32,18 @@ const Home = () => {
 
   const handleBuy = async (id: number) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(`http://localhost:5000/transact/buy/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
-
       if (response.ok) {
         console.log("Buy transaction successful.");
       } else {
         console.error("Failed to buy card.");
-      }
-    } catch (error) {
-      console.error("Network error:", error);
-    }
-  };
-
-  const handleSell = async (id: number) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/transact/sell/${id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
-        console.log("Sell transaction successful.");
-      } else {
-        console.error("Failed to sell card.");
       }
     } catch (error) {
       console.error("Network error:", error);
@@ -78,18 +58,20 @@ const Home = () => {
             <span>No pogs detected!</span>
           </div>
         ) : (
-          cardData.map((card, index) => (
-            <PogCard
-              id={card.id}
-              key={index}
-              name={card.name}
-              symbol={card.symbol}
-              price={card.current_price}
-              onBuy={() => handleBuy(card.id)}
-            />
-          ))
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {cardData.map((card) => (
+              <PogCard
+                id={card.id}
+                key={card.id}
+                name={card.name}
+                color={card.color}
+                symbol={card.symbol}
+                price={card.current_price}
+                onBuy={() => handleBuy(card.id)}
+              />
+            ))}
+          </div>
         )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2"></div>
       </div>
     </Fragment>
   );

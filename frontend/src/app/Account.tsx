@@ -1,12 +1,12 @@
 import React, { Fragment, useEffect, useState } from "react";
-import Icon from "@mdi/react";
-import { mdiCurrencyUsd } from "@mdi/js";
+
+import OwnedPogs from "../components/OwnedPogs";
 
 interface CardData {
   id: number;
   name: string;
   symbol: string;
-  price: string;
+  price: number;
 }
 
 const Account = () => {
@@ -14,38 +14,74 @@ const Account = () => {
   const [userPogs, setUserPogs] = useState<CardData[]>([]);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/account"); // Replace with the actual API endpoint
-        if (response.ok) {
-          const data = await response.json();
-          setUserName(data.name);
-          setUserPogs(data.pogs);
-        } else {
-          console.error("Failed to fetch user data.");
-        }
-      } catch (error) {
-        console.error("Network error:", error);
-      }
-    };
-
     fetchUserData();
+    decryptToken();
   }, []);
+
+  const decryptToken = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setUserName("");
+        return;
+      }
+
+      const response = await fetch("http://localhost:5000/login/decrypt/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to decrypt token");
+      }
+
+      const decodedToken = await response.json();
+      setUserName(decodedToken.name);
+    } catch (error) {
+      console.error("Error decrypting token:", error);
+      setUserName("");
+    }
+  };
+
+  const fetchUserData = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(`http://localhost:5000/list/owned/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }); // Replace with the actual API endpoint
+      if (response.ok) {
+        const result = await response.json();
+        setUserPogs(result);
+      } else {
+        console.error("Failed to fetch user data.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  };
 
   const handleSell = async (id: number) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `http://localhost:5000/transact/sell/${id}`,
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
       );
       if (response.ok) {
         console.log("Sell transaction successful.");
-        setUserPogs(userPogs.filter((pog) => pog.id !== id));
+        fetchUserData();
       } else {
         console.error("Failed to sell Pog.");
       }
@@ -61,36 +97,22 @@ const Account = () => {
           <h2 className="text-primary font-semibold mb-4">
             {userName}'s Account
           </h2>
-          <div className="grid grid-cols-1 gap-2">
-            {userPogs.length === 0 ? (
-              <div className="flex text-gray flex-col sm:flex-row items-center justify-center w-full">
-                <span>No pogs owned!</span>
-              </div>
-            ) : (
-              userPogs.map((pog, index) => (
-                <div
-                  key={index}
-                  className="bg-white border border-gray rounded-md p-4 flex items-center justify-between"
-                >
-                  <div className="flex items-center">
-                    <div className="mr-4">
-                      <span className="text-primary font-semibold">
-                        {pog.name}
-                      </span>{" "}
-                      <span className="text-gray">({pog.symbol})</span>
-                    </div>
-                    <div className="text-accent font-semibold">{pog.price}</div>
-                  </div>
-                  <button
-                    className="bg-gray text-white px-4 py-2 rounded-md"
-                    onClick={() => handleSell(pog.id)}
-                  >
-                    <Icon path={mdiCurrencyUsd} size={1} color="#c793dc" />
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
+          {userPogs.length === 0 ? (
+            <div className="bg-white border border-gray rounded-md p-4 flex items-center justify-center">
+              No pogs owned!
+            </div>
+          ) : (
+            userPogs.map((userPog) => (
+              <OwnedPogs
+                id={userPog.id}
+                key={userPog.id}
+                name={userPog.name}
+                price={userPog.price}
+                symbol={userPog.symbol}
+                handleSell={handleSell}
+              />
+            ))
+          )}
         </div>
       </div>
     </Fragment>

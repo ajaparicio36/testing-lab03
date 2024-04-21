@@ -6,6 +6,7 @@ interface PogCardProps {
   symbol: string;
   price: number;
   id: number;
+  color: string;
 }
 
 const PogCard: React.FC<PogCardProps> = ({
@@ -14,16 +15,17 @@ const PogCard: React.FC<PogCardProps> = ({
   symbol,
   price,
   id,
+  color,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden mx-auto flex flex-1">
-      <div className="p-4 bg-[#9853b3] text-[#f8f5f9]">
+      <div style={{ backgroundColor: color }} className={`p-4 text-gray`}>
         <h2 className="text-xl font-semibold">{symbol}</h2>
       </div>
       <div className="p-4">
-        <div className="pog-info mb-4">
-          <div className="text-[#d1d5db]">Name: {name}</div>
-          <div className="text-[#d1d5db]">Price: {price}</div>
+        <div className="pog-info mb-4 font-poppins">
+          <div className="text-black">Name: {name}</div>
+          <div className="text-black">Price: {price}</div>
         </div>
         <div className="buttons flex justify-end">
           <button

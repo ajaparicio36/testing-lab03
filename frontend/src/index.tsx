@@ -7,7 +7,6 @@ import reportWebVitals from "./reportWebVitals";
 import App from "./App";
 import Home from "./app/Home";
 import Admin from "./app/Admin";
-import Pogs from "./app/Pogs";
 import Account from "./app/Account";
 import Login from "./app/Login";
 import Register from "./app/Register";
