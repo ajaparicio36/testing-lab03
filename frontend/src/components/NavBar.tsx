@@ -104,7 +104,7 @@ const NavBar = () => {
 
   return (
     <Fragment>
-      <nav className="flex w-full h-12 bg-background px-4 items-center font-poppins justify-between border-b border-gray">
+      <nav className="flex font-poppins w-full h-12 bg-background px-4 items-center font-poppins justify-between border-b border-gray">
         <div
           className="text-md lg:ml-4 cursor-pointer"
           onClick={() => navigate("/")}
