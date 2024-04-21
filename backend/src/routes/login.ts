@@ -1,10 +1,12 @@
 import express, { Router, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 import { pool } from "../utils/pool";
 
 const router: Router = express.Router();
 
+dotenv.config();
 router
   .post("/", async (req: Request, res: Response) => {
     const { email, password } = req.body;
@@ -26,7 +28,7 @@ router
 
       const token = jwt.sign(
         { userId: user.id, name: user.name, type: user.type },
-        "gwapo",
+        `${process.env.JWT_SECRET}`,
         {
           expiresIn: "4h",
         }
