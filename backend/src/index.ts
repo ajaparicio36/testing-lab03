@@ -7,7 +7,6 @@ import createAndEditRouter from "./routes/createAndEdit";
 import loginRouter from "./routes/login";
 import registerRouter from "./routes/register";
 import getPogsRouter from "./routes/getPogs";
-import decryptTokenRouter from "./routes/decryptToken";
 
 const startServer = async () => {
   const app: Application = express();
