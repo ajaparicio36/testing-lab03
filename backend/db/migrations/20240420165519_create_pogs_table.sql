@@ -5,11 +5,11 @@ CREATE TABLE Pogs (
     symbol VARCHAR NOT NULL,
     current_price NUMERIC NOT NULL,
     previous_price NUMERIC NOT NULL DEFAULT 0,
+    percent_drop FLOAT NOT NULL DEFAULT 0,
     color VARCHAR NOT NULL,
     owner INTEGER,
-    CONSTRAINT fk_owner FOREIGN KEY (owner) REFERENCES Users(id),
-    CONSTRAINT previous_price_default CHECK (previous_price = 0 OR previous_price = current_price)
-);
+    CONSTRAINT fk_owner FOREIGN KEY (owner) REFERENCES Users(id)
+    );
 
 CREATE OR REPLACE FUNCTION update_previous_price()
 RETURNS TRIGGER AS $$
@@ -23,7 +23,6 @@ CREATE TRIGGER update_previous_price_trigger
 BEFORE UPDATE ON Pogs
 FOR EACH ROW
 EXECUTE FUNCTION update_previous_price();
-
 
 -- migrate:down
 DROP TABLE Pogs;
