@@ -133,7 +133,7 @@ const NavBar = () => {
           >
             <Icon path={mdiAccount} size={1.25} color="#9853b3" />
             {showPopup && (
-              <div className="absolute top-8 right-0 bg-white border border-gray rounded-md p-2 shadow-lg">
+              <div className="z-10 absolute top-8 right-0 bg-white border border-gray rounded-md p-2 shadow-lg">
                 {isLoggedIn ? (
                   <div className="flex flex-1 flex-col gap-2">
                     <div className="flex flex-row gap-2 mb-2 self-center">
