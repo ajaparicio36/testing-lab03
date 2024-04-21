@@ -1,12 +1,13 @@
 import React from "react";
 import Icon from "@mdi/react";
-import { mdiPencil, mdiDelete } from "@mdi/js";
+import { mdiPencil, mdiDelete, mdiFinance } from "@mdi/js";
 
 interface CardData {
   id: number;
   name: string;
   symbol: string;
-  price: string;
+  current_price: number;
+  previous_price: number;
   color: string;
 }
 
@@ -16,6 +17,7 @@ interface AdminPogCardProps {
   handleEdit: (card: CardData) => void;
   handleDelete: (id: number) => Promise<void>;
   handleUpdateCard: (updatedCard: CardData) => Promise<void>;
+  handleFluctuate: (id: number) => Promise<void>;
   setEditingCard: React.Dispatch<React.SetStateAction<CardData | null>>;
 }
 
@@ -25,6 +27,7 @@ const AdminPogCard: React.FC<AdminPogCardProps> = ({
   handleEdit,
   handleDelete,
   handleUpdateCard,
+  handleFluctuate,
   setEditingCard,
 }) => {
   return (
@@ -98,29 +101,40 @@ const AdminPogCard: React.FC<AdminPogCardProps> = ({
         </div>
       ) : (
         <>
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
             <div className="mr-4">
               <span className="text-primary font-semibold">{card.name}</span>{" "}
               <span className="text-gray">({card.symbol})</span>
             </div>
-            <div className="text-accent font-semibold">{card.price}</div>
+            <div className="text-accent font-semibold">
+              Current: {card.current_price}
+            </div>
+            <div className="text-accent font-semibold">
+              Previous: {card.previous_price}
+            </div>
             <div
               className="h-6 w-6 rounded-full ml-2"
               style={{ backgroundColor: card.color }}
             ></div>
           </div>
-          <div className="flex">
+          <div className="flex gap-2">
             <button
-              className="bg-primary text-white px-4 py-2 rounded-md mr-2"
+              className="bg-primary text-white px-4 py-2 rounded-md"
               onClick={() => handleEdit(card)}
             >
               <Icon path={mdiPencil} size={1} color="#f8f5f9" />
             </button>
             <button
-              className="bg-gray text-white px-4 py-2 rounded-md"
+              className="bg-primary text-white px-4 py-2 rounded-md"
               onClick={() => handleDelete(card.id)}
             >
               <Icon path={mdiDelete} size={1} color="#f8f5f9" />
+            </button>
+            <button
+              className="bg-primary text-white px-4 py-2 rounded-md"
+              onClick={() => handleFluctuate(card.id)}
+            >
+              <Icon path={mdiFinance} size={1} color="#f8f5f9" />
             </button>
           </div>
         </>
