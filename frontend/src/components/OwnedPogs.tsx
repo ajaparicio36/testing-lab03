@@ -5,7 +5,7 @@ import { mdiCurrencyUsd } from "@mdi/js";
 interface OwnedPogsProps {
   name: string;
   symbol: string;
-  price: number;
+  current_price: number;
   id: number;
   handleSell: (id: number) => void;
 }
@@ -13,7 +13,7 @@ interface OwnedPogsProps {
 const OwnedPogs: React.FC<OwnedPogsProps> = ({
   name,
   symbol,
-  price,
+  current_price,
   id,
   handleSell,
 }) => {
@@ -25,10 +25,10 @@ const OwnedPogs: React.FC<OwnedPogsProps> = ({
             <span className="text-primary font-semibold">{name}</span>{" "}
             <span className="text-gray">({symbol})</span>
           </div>
-          <div className="text-accent font-semibold">{price}</div>
+          <div className="text-accent font-semibold">${current_price}</div>
         </div>
         <button
-          className="bg-gray text-white px-4 py-2 rounded-md"
+          className="bg-accent text-black px-4 py-2 rounded-md"
           onClick={() => handleSell(id)}
         >
           <Icon path={mdiCurrencyUsd} size={1} color="#c793dc" />

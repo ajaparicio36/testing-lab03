@@ -7,7 +7,8 @@ interface CardData {
   id: number;
   name: string;
   symbol: string;
-  price: string;
+  current_price: number;
+  previous_price: number;
   color: string;
 }
 
@@ -15,23 +16,25 @@ const Admin = () => {
   const navigate = useNavigate();
   const [cardData, setCardData] = useState<CardData[]>([]);
   const [editingCard, setEditingCard] = useState<CardData | null>(null);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchCardData = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/list");
-        if (response.ok) {
-          const data: CardData[] = await response.json();
-          setCardData(data);
-        } else {
-          console.error("Failed to fetch card data.");
-        }
-      } catch (error) {
-        console.error("Network error:", error);
-      }
-    };
     fetchCardData();
   }, []);
+
+  const fetchCardData = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/list");
+      if (response.ok) {
+        const data: CardData[] = await response.json();
+        setCardData(data);
+      } else {
+        console.error("Failed to fetch card data.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  };
 
   const handleEdit = (card: CardData) => {
     setEditingCard(card);
@@ -44,6 +47,7 @@ const Admin = () => {
         {
           method: "DELETE",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
@@ -51,8 +55,52 @@ const Admin = () => {
       if (response.ok) {
         console.log("Delete successful.");
         setCardData(cardData.filter((card) => card.id !== id));
+        navigate(window.location.pathname, { replace: true });
       } else {
         console.error("Failed to delete card.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  };
+
+  const handleFluctuate = async (id: number) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/manage/fluctuate/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.ok) {
+        fetchCardData();
+        navigate(window.location.pathname, { replace: true });
+      } else {
+        console.error("Failed to fluctuate price.");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  };
+
+  const handleFluctuateAll = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/manage/fluctuate/`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        fetchCardData();
+        navigate(window.location.pathname, { replace: true });
+      } else {
+        console.error("Failed to fluctuate price.");
       }
     } catch (error) {
       console.error("Network error:", error);
@@ -66,6 +114,7 @@ const Admin = () => {
         {
           method: "PATCH",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(updatedCard),
@@ -79,6 +128,7 @@ const Admin = () => {
           )
         );
         setEditingCard(null);
+        navigate(window.location.pathname, { replace: true });
       } else {
         console.error("Failed to update card.");
       }
@@ -103,9 +153,9 @@ const Admin = () => {
           </button>
           <button
             className="bg-primary text-white px-4 py-2 rounded-md"
-            onClick={handleCreateCard}
+            onClick={handleFluctuateAll}
           >
-            Toggle Price Change
+            Fluctuate All
           </button>
         </div>
         <div className="grid grid-cols-1 gap-2">
@@ -122,6 +172,7 @@ const Admin = () => {
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
                 handleUpdateCard={handleUpdateCard}
+                handleFluctuate={handleFluctuate}
                 setEditingCard={setEditingCard}
               />
             ))

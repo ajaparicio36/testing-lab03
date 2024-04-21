@@ -17,16 +17,18 @@ const Create = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch("http://localhost:5000/manage/create", {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newPog),
       });
       if (response.ok) {
         console.log("Pog created successfully.");
-        navigate("/"); // Navigate to the home page after successful creation
+        navigate("/admin"); // Navigate to the home page after successful creation
       } else {
         console.error("Failed to create Pog.");
       }

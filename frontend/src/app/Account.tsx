@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import OwnedPogs from "../components/OwnedPogs";
 
@@ -6,12 +7,13 @@ interface CardData {
   id: number;
   name: string;
   symbol: string;
-  price: number;
+  current_price: number;
 }
 
 const Account = () => {
   const [userName, setUserName] = useState("AJ"); // Replace with the actual user's name
   const [userPogs, setUserPogs] = useState<CardData[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUserData();
@@ -81,7 +83,7 @@ const Account = () => {
       );
       if (response.ok) {
         console.log("Sell transaction successful.");
-        fetchUserData();
+        navigate(window.location.pathname, { replace: true });
       } else {
         console.error("Failed to sell Pog.");
       }
@@ -107,7 +109,7 @@ const Account = () => {
                 id={userPog.id}
                 key={userPog.id}
                 name={userPog.name}
-                price={userPog.price}
+                current_price={userPog.current_price}
                 symbol={userPog.symbol}
                 handleSell={handleSell}
               />
