@@ -22,16 +22,16 @@ router.post("/create", async (req: Request, res: Response) => {
 
 // Update an existing Pog
 router.patch("/edit/:id", async (req: Request, res: Response) => {
-  const pogId = parseInt(req.params.id);
-  const { name, symbol, price, color } = req.body;
+  const pogId = req.params.id;
+  const { name, symbol, color } = req.body;
   try {
     const query = `
       UPDATE pogs
-      SET name = $1, symbol = $2, current_price = $3, previous_price = $4, color = $5
-      WHERE id = $6
+      SET name = $1, symbol = $2, color = $3
+      WHERE id = $4
       RETURNING *
     `;
-    const values = [name, symbol, price, price, color, pogId];
+    const values = [name, symbol, color, pogId];
     const result = await pool.query(query, values);
     if (result.rowCount === 0) {
       res.status(404).json({ error: "Pog not found" });
