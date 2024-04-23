@@ -82,7 +82,7 @@ router
         WHERE id = $3`;
       await pool.query(updatePriceAndPercentage, [
         newPrice,
-        randomFloat,
+        randomFloat * -1,
         pogId,
       ]);
       res.status(200).json({ message: "Fluctuated pog! " });
