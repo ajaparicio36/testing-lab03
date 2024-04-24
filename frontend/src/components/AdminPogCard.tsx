@@ -8,6 +8,7 @@ interface CardData {
   symbol: string;
   current_price: number;
   previous_price: number;
+  percent_drop: number;
   color: string;
 }
 

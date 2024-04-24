@@ -13,7 +13,7 @@ interface DecodedToken {
 
 dotenv.config();
 router
-  .get("/list/:id", async (req: Request, res: Response) => {
+  .get("/list/pog/:id", async (req: Request, res: Response) => {
     const pogId = parseInt(req.params.id);
     try {
       const query = "SELECT * FROM pogs WHERE id = $1";
@@ -37,15 +37,16 @@ router
       ) as DecodedToken;
       const userId = decoded.userId;
 
-      const query = "SELECT owned_pogs FROM users";
+      const query = "SELECT owned_pogs FROM users WHERE id = $1";
       const { rows } = await pool.query(query, [userId]);
-      res.status(200).json(rows[0]);
+      const ownedPogs = JSON.parse(rows[0].owned_pogs);
+      res.status(200).json(ownedPogs);
     } catch (error) {
       console.error("Error fetching pogs:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   })
-  .get("/list/unowned", async (req: Request, res: Response) => {
+  .get("/list", async (req: Request, res: Response) => {
     try {
       const query = "SELECT * FROM pogs";
       const { rows } = await pool.query(query);

@@ -9,6 +9,7 @@ interface CardData {
   symbol: string;
   current_price: number;
   previous_price: number;
+  percent_drop: number;
   color: string;
 }
 
@@ -67,7 +68,7 @@ const Admin = () => {
   const handleFluctuate = async (id: number) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/manage/fluctuate/${id}`,
+        `http://localhost:5000/manage/fluctuate/pog/${id}`,
         {
           method: "GET",
           headers: {
@@ -89,13 +90,16 @@ const Admin = () => {
 
   const handleFluctuateAll = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/manage/fluctuate/`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `http://localhost:5000/manage/fluctuate/all`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (response.ok) {
         fetchCardData();
         navigate(window.location.pathname, { replace: true });

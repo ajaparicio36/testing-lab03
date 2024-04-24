@@ -7,8 +7,11 @@ interface CardData {
   id: number;
   name: string;
   symbol: string;
-  quantity: number;
+  color: string;
   current_price: number;
+  previous_price: number;
+  percent_drop: number;
+  quantity: number;
 }
 
 const Account = () => {
@@ -57,7 +60,7 @@ const Account = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }); // Replace with the actual API endpoint
+      });
       if (response.ok) {
         const result = await response.json();
         setUserPogs(result);
@@ -69,11 +72,11 @@ const Account = () => {
     }
   };
 
-  const handleSell = async (id: number) => {
+  const handleSell = async (id: number, sellQuantity: number) => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:5000/transact/sell/${id}`,
+        `http://localhost:5000/transact/sell/${id}/${sellQuantity}`,
         {
           method: "POST",
           headers: {

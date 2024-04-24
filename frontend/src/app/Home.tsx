@@ -21,7 +21,7 @@ const Home = () => {
   useEffect(() => {
     const fetchCardData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/list/unowned");
+        const response = await fetch("http://localhost:5000/list");
         if (response.ok) {
           const data: CardData[] = await response.json();
           setCardData(data);
@@ -36,16 +36,19 @@ const Home = () => {
     fetchCardData();
   }, []);
 
-  const handleBuy = async (id: number) => {
+  const handleBuy = async (id: number, buyQuantity: number) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:5000/transact/buy/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:5000/transact/buy/${id}/${buyQuantity}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.ok) {
         console.log("Buy transaction successful.");
         navigate(window.location.pathname, { replace: true });
@@ -78,7 +81,7 @@ const Home = () => {
                 color={card.color}
                 symbol={card.symbol}
                 price={card.current_price}
-                onBuy={() => handleBuy(card.id)}
+                onBuy={handleBuy}
               />
             ))}
           </div>

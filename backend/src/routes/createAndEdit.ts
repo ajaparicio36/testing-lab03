@@ -61,37 +61,41 @@ router
       res.status(500).json({ error: "Failed to delete Pog" });
     }
   })
-  .get("/fluctuate/:id", verifyAdmin, async (req: Request, res: Response) => {
-    const pogId = parseInt(req.params.id);
-    try {
-      const getPriceQuery = `SELECT * FROM Pogs WHERE id = $1`;
-      const { rows } = await pool.query(getPriceQuery, [pogId]);
-      const currentPrice = rows[0].current_price;
-      console.log(currentPrice);
+  .get(
+    "/fluctuate/pog/:id",
+    verifyAdmin,
+    async (req: Request, res: Response) => {
+      const pogId = parseInt(req.params.id);
+      try {
+        const getPriceQuery = `SELECT * FROM Pogs WHERE id = $1`;
+        const { rows } = await pool.query(getPriceQuery, [pogId]);
+        const currentPrice = rows[0].current_price;
+        console.log(currentPrice);
 
-      const getRandomFloat = (min: number, max: number) => {
-        return Math.random() * (max - min) + min;
-      };
+        const getRandomFloat = (min: number, max: number) => {
+          return Math.random() * (max - min) + min;
+        };
 
-      const randomFloat = getRandomFloat(-5, 5);
-      const newPrice: number = parseFloat(
-        (currentPrice - currentPrice * (randomFloat / 100)).toFixed(2)
-      );
-      const updatePriceAndPercentage = `UPDATE Pogs
+        const randomFloat = getRandomFloat(-5, 5);
+        const newPrice: number = parseFloat(
+          (currentPrice - currentPrice * (randomFloat / 100)).toFixed(2)
+        );
+        const updatePriceAndPercentage = `UPDATE Pogs
         SET current_price = $1, percent_drop = $2
         WHERE id = $3`;
-      await pool.query(updatePriceAndPercentage, [
-        newPrice,
-        randomFloat * -1,
-        pogId,
-      ]);
-      res.status(200).json({ message: "Fluctuated pog! " });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ error: "Failed to change price" });
+        await pool.query(updatePriceAndPercentage, [
+          newPrice,
+          randomFloat * -1,
+          pogId,
+        ]);
+        res.status(200).json({ message: "Fluctuated pog! " });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Failed to change price" });
+      }
     }
-  })
-  .get("/fluctuate/", verifyAdmin, async (req: Request, res: Response) => {
+  )
+  .get("/fluctuate/all", verifyAdmin, async (req: Request, res: Response) => {
     try {
       const getPriceQuery = `SELECT * FROM Pogs`;
       const { rows } = await pool.query(getPriceQuery);
