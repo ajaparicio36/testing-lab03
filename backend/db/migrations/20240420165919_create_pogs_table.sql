@@ -3,11 +3,10 @@ CREATE TABLE Pogs (
     id SERIAL PRIMARY KEY NOT NULL,
     name VARCHAR NOT NULL,
     symbol VARCHAR NOT NULL,
-    current_price NUMERIC NOT NULL,
-    previous_price NUMERIC NOT NULL DEFAULT 0,
+    current_price FLOAT NOT NULL,
+    previous_price FLOAT NOT NULL DEFAULT 0,
     percent_drop FLOAT NOT NULL DEFAULT 0,
-    color VARCHAR NOT NULL,
-    owned_pogs JSONB -- Add this line
+    color VARCHAR NOT NULL
 );
 
 CREATE OR REPLACE FUNCTION update_previous_price()
