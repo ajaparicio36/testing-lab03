@@ -9,8 +9,8 @@ describe("PogMarquee", () => {
 		{
 			id: 1,
 			name: "Card 1",
-			symbol: "SYM1",
-			color: "red",
+			symbol: "SYM",
+			color: "#FF0000",
 			current_price: 10.0,
 			previous_price: 12.0,
 			percent_drop: -20.0,
@@ -18,8 +18,8 @@ describe("PogMarquee", () => {
 		{
 			id: 2,
 			name: "Card 2",
-			symbol: "SYM2",
-			color: "green",
+			symbol: "ADA",
+			color: "#00FF00",
 			current_price: 15.0,
 			previous_price: 10.0,
 			percent_drop: 50.0,
@@ -30,14 +30,14 @@ describe("PogMarquee", () => {
 
 	it("renders marquee with card data", () => {
 		renderPogMarquee();
-		expect(screen.getByText("SYM1")).toBeInTheDocument();
-		expect(screen.getByText("SYM2")).toBeInTheDocument();
+		expect(screen.getByText("SYM")).toBeInTheDocument();
+		expect(screen.getByText("ADA")).toBeInTheDocument();
 	});
 
 	it("renders card symbols with correct colors", () => {
 		renderPogMarquee();
-		expect(screen.getByText("SYM1")).toHaveStyle("color: red");
-		expect(screen.getByText("SYM2")).toHaveStyle("color: green");
+		expect(screen.getByText("SYM")).toHaveStyle("color: #FF0000");
+		expect(screen.getByText("ADA")).toHaveStyle("color: #00FF00");
 	});
 
 	it("renders percent drop with correct color", () => {
