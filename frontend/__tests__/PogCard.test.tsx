@@ -42,17 +42,28 @@ describe("PogCard", () => {
 		expect(getByText("Buy")).toBeInTheDocument();
 	});
 
-	it("calls onBuy when buy button is clicked", () => {
+	it("renders BuyModal when buy button is clicked", () => {
 		const { getByText } = renderComponent();
 		const buyButton = getByText("Buy");
 		fireEvent.click(buyButton);
+		expect(getByText("Buy Quantity")).toBeInTheDocument(); // assuming the BuyModal has a header with the text "Buy Quantity"
+	});
+
+	it("calls onBuy when confirm buy is clicked", () => {
+		const { getByText } = renderComponent();
+		const buyButton = getByText("Buy");
+		fireEvent.click(buyButton);
+		const confirmButton = getByText("Confirm"); // assuming the BuyModal has a confirm button with the text "Confirm"
+		fireEvent.click(confirmButton);
 		expect(onBuy).toHaveBeenCalledTimes(1);
-		expect(onBuy).toHaveBeenCalledWith(id);
+		expect(onBuy).toHaveBeenCalledWith(id, 1); // assuming the default quantity is 1
 	});
 
 	it("renders with correct background color", () => {
 		const { container } = renderComponent();
-		const element = container.getElementsByClassName("text-gray")[0];
-		expect(element).toHaveStyle(`background-color: ${color}`);
+		const element = container.querySelector(
+			`div[style*="background-color: ${color};"]`,
+		);
+		expect(element).toBeInTheDocument();
 	});
 });

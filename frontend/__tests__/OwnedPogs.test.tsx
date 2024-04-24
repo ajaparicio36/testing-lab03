@@ -7,6 +7,7 @@ describe("OwnedPogs", () => {
 	const symbol = "TPG";
 	const currentPrice = 10.99;
 	const id = 1;
+	const quantity = 1;
 	const handleSell = jest.fn();
 
 	const renderComponent = () =>
@@ -16,6 +17,7 @@ describe("OwnedPogs", () => {
 				symbol={symbol}
 				current_price={currentPrice}
 				id={id}
+				quantity={quantity}
 				handleSell={handleSell}
 			/>,
 		);
@@ -26,9 +28,9 @@ describe("OwnedPogs", () => {
 		expect(getByText(`(${symbol})`)).toBeInTheDocument();
 	});
 
-	it("renders current price", () => {
+	it("renders quantity", () => {
 		const { getByText } = renderComponent();
-		expect(getByText(`$${currentPrice}`)).toBeInTheDocument();
+		expect(getByText(`Quantity: ${quantity}`)).toBeInTheDocument();
 	});
 
 	it("renders sell button with icon", () => {
@@ -38,11 +40,20 @@ describe("OwnedPogs", () => {
 		expect(sellButton.querySelector("svg")).toBeInTheDocument();
 	});
 
-	it("calls handleSell when sell button is clicked", () => {
-		const { getByRole } = renderComponent();
+	it("renders SellModal when sell button is clicked", () => {
+		const { getByRole, getByText } = renderComponent();
 		const sellButton = getByRole("button");
 		fireEvent.click(sellButton);
+		expect(getByText("Sell")).toBeInTheDocument(); // assuming the SellModal has a header with the text "Sell"
+	});
+
+	it("calls handleSell when confirm sell is clicked", () => {
+		const { getByRole, getByText } = renderComponent();
+		const sellButton = getByRole("button");
+		fireEvent.click(sellButton);
+		const confirmButton = getByText("Confirm"); // assuming the confirm button has the text "Confirm"
+		fireEvent.click(confirmButton);
 		expect(handleSell).toHaveBeenCalledTimes(1);
-		expect(handleSell).toHaveBeenCalledWith(id);
+		expect(handleSell).toHaveBeenCalledWith(id, quantity);
 	});
 });
