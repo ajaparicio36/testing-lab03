@@ -7,9 +7,8 @@ CREATE TABLE Pogs (
     previous_price NUMERIC NOT NULL DEFAULT 0,
     percent_drop FLOAT NOT NULL DEFAULT 0,
     color VARCHAR NOT NULL,
-    owner INTEGER,
-    CONSTRAINT fk_owner FOREIGN KEY (owner) REFERENCES Users(id)
-    );
+    owned_pogs JSONB -- Add this line
+);
 
 CREATE OR REPLACE FUNCTION update_previous_price()
 RETURNS TRIGGER AS $$
