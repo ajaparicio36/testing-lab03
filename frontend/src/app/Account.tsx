@@ -7,6 +7,7 @@ interface CardData {
   id: number;
   name: string;
   symbol: string;
+  quantity: number;
   current_price: number;
 }
 
@@ -17,10 +18,10 @@ const Account = () => {
 
   useEffect(() => {
     fetchUserData();
-    decryptToken();
+    getUsername();
   }, []);
 
-  const decryptToken = async () => {
+  const getUsername = async () => {
     try {
       const token = localStorage.getItem("token");
 
@@ -111,6 +112,7 @@ const Account = () => {
                 name={userPog.name}
                 current_price={userPog.current_price}
                 symbol={userPog.symbol}
+                quantity={userPog.quantity}
                 handleSell={handleSell}
               />
             ))

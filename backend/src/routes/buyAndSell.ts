@@ -11,11 +11,20 @@ interface DecodedToken {
   type: string;
 }
 
+interface Pog {
+  id: number;
+  name: string;
+  symbol: string;
+  quantity: string;
+  current_price: string;
+}
+
 dotenv.config();
 
 router
-  .post("/buy/:id", async (req: Request, res: Response) => {
+  .post("/buy/:id/:quantity", async (req: Request, res: Response) => {
     const pogId: number = parseInt(req.params.id);
+    const quantity: number = parseInt(req.params.quantity);
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
       return res.status(401).json({ error: "No token provided" });
@@ -28,15 +37,32 @@ router
       ) as DecodedToken;
       const userId = decoded.userId;
 
-      const getPriceQuery = "SELECT current_price FROM pogs WHERE id = $1";
-      const { rows } = await pool.query(getPriceQuery, [pogId]);
-      const currentPrice = rows[0].current_price;
+      const getPriceQuery =
+        "SELECT name, symbol, current_price FROM pogs WHERE id = $1";
+      const price = await pool.query(getPriceQuery, [pogId]);
+      const currentPrice = parseFloat(price.rows[0].current_price) * quantity;
       const updateBalanceQuery =
         "UPDATE Users SET funds = funds - $1 WHERE id = $2";
       await pool.query(updateBalanceQuery, [currentPrice, userId]);
-      const updateOwnerQuery = "UPDATE pogs SET owner = $1 WHERE id = $2";
-
-      await pool.query(updateOwnerQuery, [userId, pogId]);
+      const getOwnedPogs = "SELECT owned_pogs FROM users WHERE id = $1";
+      const pogsJson = await pool.query(getOwnedPogs, [userId]);
+      const ownedPogs = JSON.parse(pogsJson.rows[0].owned_pogs);
+      const existingPogs = ownedPogs.find((obj: Pog) => obj.id === pogId);
+      if (existingPogs) {
+        existingPogs.quantity += quantity;
+      } else {
+        ownedPogs.push({
+          id: pogId,
+          name: price.rows[0].name,
+          symbol: price.rows[0].symbol,
+          current_price: price.rows[0].current_price,
+          quantity: quantity,
+        });
+      }
+      const newPogsList = JSON.stringify(ownedPogs);
+      const newPogsQuery = "UPDATE Users SET owned_pogs = $1 WHERE id = $2";
+      const variables: string[] = [newPogsList, String(userId)];
+      const updatedUserPogs = await pool.query(newPogsQuery, variables);
       res.status(201).json({ message: "Pog bought successfully" });
     } catch (err) {
       console.error("Error buying Pog:", err);
@@ -46,8 +72,9 @@ router
       res.status(500).json({ error: "Internal server error" });
     }
   })
-  .post("/sell/:id", async (req: Request, res: Response) => {
+  .post("/sell/:id/:quantity", async (req: Request, res: Response) => {
     const pogId: number = parseInt(req.params.id);
+    const quantity: number = parseInt(req.params.quantity);
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
       return res.status(401).json({ error: "No token provided" });
@@ -59,17 +86,41 @@ router
       ) as DecodedToken;
       const userId = decoded.userId;
 
-      const getPriceQuery = "SELECT current_price FROM pogs WHERE id = $1";
-      const { rows } = await pool.query(getPriceQuery, [pogId]);
-      const currentPrice = rows[0].current_price;
-
+      const getPriceQuery =
+        "SELECT name, symbol, current_price FROM pogs WHERE id = $1";
+      const price = await pool.query(getPriceQuery, [pogId]);
+      const currentPrice = parseFloat(price.rows[0].current_price) * quantity;
       const updateBalanceQuery =
-        "UPDATE Users SET funds = funds + $1 WHERE id = $2";
+        "UPDATE Users SET funds = funds - $1 WHERE id = $2";
       await pool.query(updateBalanceQuery, [currentPrice, userId]);
 
-      const updatePriceAndOwnerQuery =
-        "UPDATE pogs SET owner = NULL WHERE id = $1";
-      await pool.query(updatePriceAndOwnerQuery, [pogId]);
+      const getOwnedPogs = "SELECT owned_pogs FROM users WHERE id = $1";
+      const pogsJson = await pool.query(getOwnedPogs, [userId]);
+      const ownedPogs = JSON.parse(pogsJson.rows[0].owned_pogs);
+
+      const existingPogs = ownedPogs.find((obj: Pog) => obj.id === pogId);
+      if (existingPogs) {
+        existingPogs.quantity -= quantity;
+        if (existingPogs.quantity == 0) {
+          const deletedPog = ownedPogs.findIndex(
+            (obj: Pog) => obj.id === pogId
+          );
+          if (deletedPog) {
+            ownedPogs.pop(deletedPog);
+          } else {
+            throw new Error("Pog can't be found!");
+          }
+        } else if (existingPogs.quantity < 0) {
+          throw new Error("Quantity is less than 0!");
+        }
+      } else {
+        throw new Error("Pog not found!");
+      }
+
+      const newPogsList = JSON.stringify(ownedPogs);
+      const newPogsQuery = "UPDATE Users SET owned_pogs = $1 WHERE id = $2";
+      const variables: string[] = [newPogsList, String(userId)];
+      await pool.query(newPogsQuery, variables);
 
       res.status(201).json({ message: "Pog sold successfully" });
     } catch (error) {

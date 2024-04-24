@@ -7,6 +7,7 @@ interface OwnedPogsProps {
   symbol: string;
   current_price: number;
   id: number;
+  quantity: number;
   handleSell: (id: number) => void;
 }
 
@@ -15,6 +16,7 @@ const OwnedPogs: React.FC<OwnedPogsProps> = ({
   symbol,
   current_price,
   id,
+  quantity,
   handleSell,
 }) => {
   return (
@@ -26,6 +28,7 @@ const OwnedPogs: React.FC<OwnedPogsProps> = ({
             <span className="text-gray">({symbol})</span>
           </div>
           <div className="text-accent font-semibold">${current_price}</div>
+          <div className="text-accent font-semibold">Quantity: {quantity}</div>
         </div>
         <button
           className="bg-accent text-black px-4 py-2 rounded-md"
