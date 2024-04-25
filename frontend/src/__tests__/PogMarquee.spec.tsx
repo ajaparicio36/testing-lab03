@@ -1,68 +1,78 @@
 import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import PogMarquee from "../components/PogMarquee";
+import "resize-observer-polyfill";
 
 interface CardData {
-	id: number;
-	name: string;
-	symbol: string;
-	color: string;
-	current_price: number;
-	previous_price: number;
-	percent_drop: number;
+  id: number;
+  name: string;
+  symbol: string;
+  color: string;
+  current_price: number;
+  previous_price: number;
+  percent_drop: number;
 }
 
 describe("PogMarquee", () => {
-	const cardData: CardData[] = [
-		{
-			id: 1,
-			name: "Card 1",
-			symbol: "SYM1",
-			color: "red",
-			current_price: 10,
-			previous_price: 12,
-			percent_drop: -20,
-		},
-		{
-			id: 2,
-			name: "Card 2",
-			symbol: "SYM2",
-			color: "green",
-			current_price: 15,
-			previous_price: 10,
-			percent_drop: 50,
-		},
-	];
+  const cardData: CardData[] = [
+    {
+      id: 1,
+      name: "Card 1",
+      symbol: "SYM1",
+      color: "red",
+      current_price: 10,
+      previous_price: 12,
+      percent_drop: -20,
+    },
+    {
+      id: 2,
+      name: "Card 2",
+      symbol: "SYM2",
+      color: "green",
+      current_price: 15,
+      previous_price: 10,
+      percent_drop: 50,
+    },
+  ];
 
-	it("renders marquee with correct elements", () => {
-		const { getByText } = render(<PogMarquee cardData={cardData} />);
+  it("renders marquee with correct elements", () => {
+    const { getAllByText } = render(<PogMarquee cardData={cardData} />);
 
-		expect(getByText("SYM1")).toBeInTheDocument();
-		expect(getByText("-20.00%")).toBeInTheDocument();
-		expect(getByText("SYM2")).toBeInTheDocument();
-		expect(getByText("50.00%")).toBeInTheDocument();
-	});
+    const sym1Elements = getAllByText("SYM1");
+    const negativePercentElements = getAllByText("-20.00%");
+    const sym2Elements = getAllByText("SYM2");
+    const positivePercentElements = getAllByText("50.00%");
 
-	it("renders marquee with correct styles", () => {
-		const { container } = render(<PogMarquee cardData={cardData} />);
+    expect(sym1Elements.length).toBe(2);
+    expect(negativePercentElements.length).toBe(2);
+    expect(sym2Elements.length).toBe(2);
+    expect(positivePercentElements.length).toBe(2);
+  });
 
-		expect(
-			container.getElementsByClassName("bg-background").length,
-		).toBeGreaterThan(0);
-		expect(
-			container.getElementsByClassName("text-[#FF0000]").length,
-		).toBeGreaterThan(0);
-		expect(
-			container.getElementsByClassName("text-[#00FF00]").length,
-		).toBeGreaterThan(0);
-	});
+  it("renders marquee with correct styles", () => {
+    const { container } = render(<PogMarquee cardData={cardData} />);
 
-	it("pauses marquee on hover", () => {
-		const { container } = render(<PogMarquee cardData={cardData} />);
+    expect(
+      container.getElementsByClassName("bg-background").length
+    ).toBeGreaterThan(0);
+    expect(
+      container.getElementsByClassName("text-[#FF0000]").length
+    ).toBeGreaterThan(0);
+    expect(
+      container.getElementsByClassName("text-[#00FF00]").length
+    ).toBeGreaterThan(0);
+  });
 
-		const marquee = container.getElementsByClassName("w-full")[0];
-		fireEvent.mouseOver(marquee);
+  it("pauses marquee on hover", () => {
+    const { container } = render(<PogMarquee cardData={cardData} />);
+    const marquee = container.getElementsByClassName(
+      "rfm-marquee-container"
+    )[0];
 
-		expect(marquee.classList.contains("paused")).toBe(true);
-	});
+    fireEvent.mouseOver(marquee);
+    const computedStyle = window.getComputedStyle(marquee);
+    const pauseOnHover = computedStyle.getPropertyValue("--pause-on-hover");
+
+    expect(pauseOnHover).toBe("paused");
+  });
 });
