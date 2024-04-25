@@ -42,6 +42,7 @@ const OwnedPogs: React.FC<OwnedPogsProps> = ({
           <div className="text-accent font-semibold">Quantity: {quantity}</div>
         </div>
         <button
+          data-testid="sell-button"
           className="bg-accent text-black px-4 py-2 rounded-md"
           onClick={handleSellClick}
         >

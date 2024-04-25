@@ -26,6 +26,7 @@ const NavBar = () => {
 
   useEffect(() => {
     getBalance();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const getBalance = async () => {
@@ -128,6 +129,7 @@ const NavBar = () => {
             </div>
           )}
           <div
+            role="button"
             className="border border-primary rounded-full p-0.5 cursor-pointer relative"
             onClick={togglePopup}
           >

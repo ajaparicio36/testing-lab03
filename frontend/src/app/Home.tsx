@@ -62,7 +62,7 @@ const Home = () => {
 
   return (
     <Fragment>
-      <div className="z-1 mt-4">
+      <div data-testid="rfm-marquee-container" className="z-1 mt-4">
         <PogMarquee cardData={cardData} />
       </div>
 

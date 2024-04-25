@@ -120,18 +120,21 @@ const AdminPogCard: React.FC<AdminPogCardProps> = ({
           </div>
           <div className="flex gap-2">
             <button
+              data-testid="edit-button"
               className="bg-primary text-white px-4 py-2 rounded-md"
               onClick={() => handleEdit(card)}
             >
               <Icon path={mdiPencil} size={1} color="#f8f5f9" />
             </button>
             <button
+              data-testid="delete-button"
               className="bg-primary text-white px-4 py-2 rounded-md"
               onClick={() => handleDelete(card.id)}
             >
               <Icon path={mdiDelete} size={1} color="#f8f5f9" />
             </button>
             <button
+              data-testid="fluctuate-button"
               className="bg-primary text-white px-4 py-2 rounded-md"
               onClick={() => handleFluctuate(card.id)}
             >
