@@ -1,5 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
-import PogCard from "./PogCard";
+import React from "react";
 import Marquee from "react-fast-marquee";
 
 interface CardData {

@@ -1,5 +1,7 @@
+/* eslint-disable testing-library/no-node-access */
+/* eslint-disable testing-library/no-container */
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import PogMarquee from "../components/PogMarquee";
 import "resize-observer-polyfill";
 
@@ -36,12 +38,12 @@ describe("PogMarquee", () => {
   ];
 
   it("renders marquee with correct elements", () => {
-    const { getAllByText } = render(<PogMarquee cardData={cardData} />);
+    render(<PogMarquee cardData={cardData} />);
 
-    const sym1Elements = getAllByText("SYM1");
-    const negativePercentElements = getAllByText("-20.00%");
-    const sym2Elements = getAllByText("SYM2");
-    const positivePercentElements = getAllByText("50.00%");
+    const sym1Elements = screen.getAllByText("SYM1");
+    const negativePercentElements = screen.getAllByText("-20.00%");
+    const sym2Elements = screen.getAllByText("SYM2");
+    const positivePercentElements = screen.getAllByText("50.00%");
 
     expect(sym1Elements.length).toBe(2);
     expect(negativePercentElements.length).toBe(2);
