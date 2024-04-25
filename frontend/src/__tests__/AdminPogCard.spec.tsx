@@ -1,7 +1,6 @@
 import React from "react";
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import AdminPogCard from "../components/AdminPogCard";
-import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 interface CardData {

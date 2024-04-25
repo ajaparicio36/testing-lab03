@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import PogCard from "../components/PogCard";
 
 describe("PogCard", () => {
@@ -23,38 +23,38 @@ describe("PogCard", () => {
     );
 
   it("renders pog symbol", () => {
-    const { getByText } = renderComponent();
-    expect(getByText(symbol)).toBeInTheDocument();
+    renderComponent();
+    expect(screen.getByText(symbol)).toBeInTheDocument();
   });
 
   it("renders pog name", () => {
-    const { getByText } = renderComponent();
-    expect(getByText(`Name: ${name}`)).toBeInTheDocument();
+    renderComponent();
+    expect(screen.getByText(`Name: ${name}`)).toBeInTheDocument();
   });
 
   it("renders pog price", () => {
-    const { getByText } = renderComponent();
-    expect(getByText(`Price: ${price}`)).toBeInTheDocument();
+    renderComponent();
+    expect(screen.getByText(`Price: ${price}`)).toBeInTheDocument();
   });
 
   it("renders buy button", () => {
-    const { getByText } = renderComponent();
-    expect(getByText("Buy")).toBeInTheDocument();
+    renderComponent();
+    expect(screen.getByText("Buy")).toBeInTheDocument();
   });
 
   it("renders BuyModal when buy button is clicked", () => {
-    const { getByText, getByTestId } = renderComponent();
-    const buyButton = getByText("Buy");
+    renderComponent();
+    const buyButton = screen.getByText("Buy");
     fireEvent.click(buyButton);
-    const modalOverlay = getByTestId("modal-overlay");
+    const modalOverlay = screen.getByTestId("modal-overlay");
     expect(modalOverlay).toBeInTheDocument();
   });
 
   it("calls onBuy when confirm buy is clicked", () => {
-    const { getByText } = renderComponent();
-    const buyButton = getByText("Buy");
+    renderComponent();
+    const buyButton = screen.getByText("Buy");
     fireEvent.click(buyButton);
-    const confirmButton = getByText("Confirm"); // assuming the BuyModal has a confirm button with the text "Confirm"
+    const confirmButton = screen.getByText("Confirm"); // assuming the BuyModal has a confirm button with the text "Confirm"
     fireEvent.click(confirmButton);
     expect(onBuy).toHaveBeenCalledTimes(1);
     expect(onBuy).toHaveBeenCalledWith(id, 1); // assuming the default quantity is 1

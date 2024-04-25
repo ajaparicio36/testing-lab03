@@ -1,7 +1,6 @@
 import React from "react";
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import OwnedPogs from "../components/OwnedPogs";
-import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom";
 
 describe("OwnedPogs", () => {
@@ -25,32 +24,32 @@ describe("OwnedPogs", () => {
     );
 
   it("renders pog name and symbol", () => {
-    const { getByText } = renderComponent();
-    expect(getByText(name)).toBeInTheDocument();
-    expect(getByText(`(${symbol})`)).toBeInTheDocument();
+    renderComponent();
+    expect(screen.getByText(name)).toBeInTheDocument();
+    expect(screen.getByText(`(${symbol})`)).toBeInTheDocument();
   });
 
   it("renders quantity", () => {
-    const { getByText } = renderComponent();
-    expect(getByText(`Quantity: ${quantity}`)).toBeInTheDocument();
+    renderComponent();
+    expect(screen.getByText(`Quantity: ${quantity}`)).toBeInTheDocument();
   });
 
   it("renders SellModal when sell button is clicked", async () => {
-    const { getByTestId, findByTestId } = renderComponent();
-    const sellButton = getByTestId("sell-button");
+    renderComponent();
+    const sellButton = screen.getByTestId("sell-button");
 
     fireEvent.click(sellButton);
-    const sellModal = await findByTestId("sell-modal");
+    const sellModal = await screen.findByTestId("sell-modal");
     expect(sellModal).toBeInTheDocument();
   });
 
-  it("calls handleSell when confirm sell is clicked", () => {
-    const { getByRole, getByText } = renderComponent();
-    const sellButton = getByRole("button");
+  it("calls handleSell when confirm sell is clicked", async () => {
+    renderComponent();
+    const sellButton = screen.getByRole("button");
     fireEvent.click(sellButton);
-    const confirmButton = getByText("Confirm"); // assuming the confirm button has the text "Confirm"
+    const confirmButton = screen.getByText("Confirm"); // assuming the confirm button has the text "Confirm"
     fireEvent.click(confirmButton);
-    expect(handleSell).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(handleSell).toHaveBeenCalledTimes(1));
     expect(handleSell).toHaveBeenCalledWith(id, quantity);
   });
 });
