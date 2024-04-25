@@ -47,7 +47,7 @@ describe("OwnedPogs", () => {
     renderComponent();
     const sellButton = screen.getByRole("button");
     fireEvent.click(sellButton);
-    const confirmButton = screen.getByText("Confirm"); // assuming the confirm button has the text "Confirm"
+    const confirmButton = screen.getByText("Confirm");
     fireEvent.click(confirmButton);
     await waitFor(() => expect(handleSell).toHaveBeenCalledTimes(1));
     expect(handleSell).toHaveBeenCalledWith(id, quantity);

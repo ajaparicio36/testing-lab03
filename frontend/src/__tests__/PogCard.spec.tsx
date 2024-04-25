@@ -54,9 +54,9 @@ describe("PogCard", () => {
     renderComponent();
     const buyButton = screen.getByText("Buy");
     fireEvent.click(buyButton);
-    const confirmButton = screen.getByText("Confirm"); // assuming the BuyModal has a confirm button with the text "Confirm"
+    const confirmButton = screen.getByText("Confirm");
     fireEvent.click(confirmButton);
     expect(onBuy).toHaveBeenCalledTimes(1);
-    expect(onBuy).toHaveBeenCalledWith(id, 1); // assuming the default quantity is 1
+    expect(onBuy).toHaveBeenCalledWith(id, 1);
   });
 });

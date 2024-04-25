@@ -21,7 +21,7 @@ describe("AdminPogCard", () => {
     current_price: 10.99,
     previous_price: 9.99,
     color: "#ff0000",
-    percent_drop: 0, // add this property
+    percent_drop: 0,
   };
 
   const handleEdit = jest.fn();
@@ -54,21 +54,21 @@ describe("AdminPogCard", () => {
   });
 
   it("calls handleEdit when edit button is clicked", async () => {
-    renderAdminPogCard(null); // Pass null as editingCard
+    renderAdminPogCard(null);
     const editButton = screen.getByTestId("edit-button");
     fireEvent.click(editButton);
     await waitFor(() => expect(handleEdit).toHaveBeenCalledTimes(1));
   });
 
   it("calls handleDelete when delete button is clicked", async () => {
-    renderAdminPogCard(null); // Pass null as editingCard
+    renderAdminPogCard(null);
     const deleteButton = screen.getByTestId("delete-button");
     fireEvent.click(deleteButton);
     await waitFor(() => expect(handleDelete).toHaveBeenCalledTimes(1));
   });
 
   it("calls handleFluctuate when fluctuate button is clicked", async () => {
-    renderAdminPogCard(null); // Pass null as editingCard
+    renderAdminPogCard(null);
     const fluctuateButton = screen.getByTestId("fluctuate-button");
     fireEvent.click(fluctuateButton);
     await waitFor(() => expect(handleFluctuate).toHaveBeenCalledTimes(1));
